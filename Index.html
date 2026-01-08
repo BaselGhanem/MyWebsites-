@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Basel's Project Hub - A centralized command center for data analysis tools, web projects, and educational resources.">
+    <meta name="theme-color" content="#0f172a">
+    
+    <title>مشاريع باسل | Basel's Command Center</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. CORE ARCHITECTURE & VARIABLES --- */
+        :root {
+            /* Palette: Deep Space Data Theme */
+            --bg-deep: #020617;
+            --bg-surface: rgba(30, 41, 59, 0.4);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --accent: #8b5cf6;
+            --success: #10b981;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --font-ar: 'Cairo', sans-serif;
+            --font-en: 'Inter', sans-serif;
+            
+            --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset & Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-ar);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Dynamic background mesh */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+            background-attachment: fixed;
+        }
+
+        /* --- 2. ADVANCED SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* --- 3. LOADER ANIMATION --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-orbit {
+            width: 50px; height: 50px; border: 2px solid rgba(59, 130, 246, 0.2);
+            border-top: 2px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* --- 4. LAYOUT COMPONENTS --- */
+        .container {
+            width: 100%; max-width: 1000px; padding: 40px 20px;
+            display: flex; flex-direction: column; gap: 40px;
+            position: relative; z-index: 1;
+        }
+
+        /* Header Area */
+        header { text-align: center; position: relative; animation: slideDown 0.8s var(--ease-elastic); }
+        
+        .badge-pro {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 20px;
+            color: var(--primary); font-size: 0.8rem; font-weight: 700;
+            margin-bottom: 15px; letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem); font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 10px; line-height: 1.2;
+        }
+
+        .greeting-text { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* Search & Filter Bar */
+        .controls-bar {
+            display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between;
+            background: var(--bg-surface); backdrop-filter: blur(10px);
+            padding: 10px; border-radius: 16px; border: 1px solid var(--border-glass);
+            animation: fadeIn 1s ease 0.3s backwards;
+            position: sticky; top: 20px; z-index: 100;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        .search-wrapper {
+            flex: 1; min-width: 250px; position: relative;
+        }
+        .search-wrapper i {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); pointer-events: none;
+        }
+        #searchInput {
+            width: 100%; padding: 12px 45px 12px 15px;
+            background: rgba(0,0,0,0.2); border: 1px solid transparent;
+            border-radius: 10px; color: white; font-family: inherit;
+            transition: var(--ease-smooth);
+        }
+        #searchInput:focus {
+            background: rgba(0,0,0,0.4); border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .filter-tags { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-btn {
+            background: transparent; border: 1px solid var(--border-glass);
+            color: var(--text-muted); padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-size: 0.9rem;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary); border-color: var(--primary); color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- 5. PREMIUM GRID SYSTEM --- */
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px; perspective: 1000px; /* For 3D Tilt */
+        }
+
+        .card {
+            position: relative; height: 160px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden;
+            transition: transform 0.1s; /* Fast for tilt */
+            cursor: pointer;
+            isolation: isolate; /* Create stacking context */
+        }
+
+        /* The Glow Effect Layer */
+        .card::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 255, 255, 0.06), 
+                transparent 40%
+            );
+            opacity: 0; transition: opacity 0.5s; z-index: -1;
+        }
+        .card:hover::before { opacity: 1; }
+
+        /* Card Content */
+        .card-inner {
+            z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 12px;
+            transition: transform 0.3s var(--ease-elastic);
+        }
+        .card:hover .card-inner { transform: translateY(-5px); }
+
+        .icon-box {
+            width: 50px; height: 50px;
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .card:hover .icon-box {
+            background: var(--primary); color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+            border-color: var(--primary); transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-weight: 700; font-size: 1rem; color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+        
+        .card-category {
+            font-size: 0.75rem; color: var(--text-muted);
+            background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px;
+        }
+
+        /* Utility Actions on Card */
+        .card-actions {
+            position: absolute; top: 10px; right: 10px;
+            opacity: 0; transform: translateX(10px); transition: 0.3s ease; z-index: 5;
+        }
+        .card:hover .card-actions { opacity: 1; transform: translateX(0); }
+        .action-btn {
+            background: rgba(0,0,0,0.6); border: none; color: white;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; transition: 0.2s;
+        }
+        .action-btn:hover { background: var(--success); }
+
+        /* Live Indicator */
+        .live-dot {
+            position: absolute; top: 12px; left: 12px;
+            width: 8px; height: 8px; background: var(--success);
+            border-radius: 50%; box-shadow: 0 0 10px var(--success);
+        }
+
+        /* --- 6. ANIMATIONS --- */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Staggered Reveal Animation Class (JS adds this) */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            animation: revealItem 0.6s var(--ease-elastic) forwards;
+        }
+        @keyframes revealItem { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 7. FOOTER --- */
+        footer {
+            margin-top: auto; padding: 40px 0; text-align: center;
+            border-top: 1px solid var(--border-glass); width: 100%;
+            font-size: 0.9rem; color: var(--text-muted);
+        }
+        .social-links { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+        .social-links a { color: var(--text-muted); transition: 0.3s; font-size: 1.2rem; }
+        .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--bg-surface); backdrop-filter: blur(10px);
+            border: 1px solid var(--success); padding: 12px 24px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0;
+            transition: 0.4s var(--ease-elastic); z-index: 200;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-orbit"></div>
+    </div>
+
+    <div id="cursor-orb" style="position:fixed; width:400px; height:400px; background:radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%); pointer-events:none; transform:translate(-50%, -50%); transition: transform 0.1s; z-index:0; top:0; left:0;"></div>
+
+    <div class="container">
+        
+        <header>
+            <div class="badge-pro"><i class="fa-solid fa-code-branch"></i> v2.0 Production</div>
+            <h1>مشاريع باسل<br><span style="font-size:0.6em; opacity:0.8; font-family:var(--font-en)">Basel's Command Center</span></h1>
+            <p class="greeting-text" id="greeting">Welcome back, Sir.</p>
+        </header>
+
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search projects (e.g. Excel, Web)...">
+                <i class="fa-solid fa-search"></i>
+            </div>
+            <div class="filter-tags" id="filterContainer">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="tool">Tools</button>
+                <button class="filter-btn" data-filter="web">Web</button>
+                <button class="filter-btn" data-filter="excel">Excel</button>
+            </div>
+        </div>
+
+        <div class="grid-container" id="projectsGrid">
+            </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Basel Ghanem. Designed with <i class="fa-solid fa-heart" style="color:var(--primary)"></i> & Data.</p>
+        <div class="social-links">
+            <a href="#"><i class="fa-brands fa-github"></i></a>
+            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-check-circle" style="color:var(--success)"></i>
+        <span>Link copied to clipboard!</span>
+    </div>
+
+    <script>
+        /**
+         * Application Architecture:
+         * 1. Data Layer: Centralized configuration of all projects.
+         * 2. Component Layer: Functions to generate HTML components.
+         * 3. Logic Layer: Filtering, Search, Time-based Logic.
+         * 4. Interaction Layer: Animations, Tilt, Copy-paste.
+         */
+
+        // --- 1. DATA LAYER ---
+        const projects = [
+            { id: 1, title: "Eduvision", url: "https://baselghanem.github.io/Eduvision/", icon: "🚀", category: "web" },
+            { id: 2, title: "Xacademy", url: "https://baselghanem.github.io/Xacademy/", icon: "🎓", category: "web" },
+            { id: 3, title: "Portfolio", url: "https://baselghanem.github.io/Portfolio/", icon: "👨‍💻", category: "personal" },
+            { id: 4, title: "CV Builder", url: "https://baselghanem.github.io/CVBuilder/", icon: "📄", category: "tool" },
+            { id: 5, title: "Website", url: "https://baselghanem.github.io/Website/", icon: "🌐", category: "web" },
+            { id: 6, title: "Best Acheivers", url: "https://baselghanem.github.io/Best-Acheivers/", icon: "🏆", category: "web" },
+            { id: 7, title: "Ramada Delivery", url: "https://baselghanem.github.io/RamadaDelivery/", icon: "🚚", category: "tool" },
+            { id: 8, title: "Schedule", url: "https://baselghanem.github.io/Schedule/", icon: "📅", category: "tool" },
+            { id: 9, title: "Charts", url: "https://baselghanem.github.io/Charts/", icon: "📊", category: "excel" },
+            { id: 10, title: "Vlookup", url: "https://baselghanem.github.io/Vlookup/", icon: "🔍", category: "excel" },
+            { id: 11, title: "Cond. Formatting", url: "https://baselghanem.github.io/Session3-Conditional-Formatting/", icon: "🎨", category: "excel" },
+            { id: 12, title: "MIXIF", url: "https://baselghanem.github.io/MIXIF/", icon: "🧮", category: "excel" },
+            { id: 13, title: "Count Group", url: "https://baselghanem.github.io/S5-Countgroup/", icon: "🔢", category: "excel" },
+            { id: 14, title: "Subtotal", url: "https://baselghanem.github.io/S4-Subtotal/", icon: "Σ", category: "excel" },
+            { id: 15, title: "Basics 1", url: "https://baselghanem.github.io/Basics1/", icon: "📝", category: "excel" },
+            { id: 16, title: "Introduction", url: "https://baselghanem.github.io/introduction/", icon: "👋", category: "personal" },
+            { id: 17, title: "Xacademy GPT", url: "https://baselghanem.github.io/XacademyChatgpt/", icon: "🤖", category: "tool" }
+        ];
+
+        // --- 2. LOGIC & COMPONENT LAYER ---
+
+        const grid = document.getElementById('projectsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const greetingEl = document.getElementById('greeting');
+        const toast = document.getElementById('toast');
+
+        // Dynamic Greeting Logic
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let msg = "Welcome back, Sir.";
+            if (hour < 12) msg = "Good Morning, Basel.";
+            else if (hour < 18) msg = "Good Afternoon, Basel.";
+            else msg = "Good Evening, Basel.";
+            greetingEl.textContent = msg;
+        }
+
+        // Render Card Function (Builder Pattern)
+        function createCard(project, index) {
+            const card = document.createElement('a');
+            card.href = project.url;
+            card.className = 'card';
+            card.style.animationDelay = `${index * 0.05}s`; // Staggered delay
+            card.classList.add('reveal');
+            
+            // Categories mapping for display
+            const catMap = { excel: 'Excel Master', web: 'Web Dev', tool: 'SaaS Tool', personal: 'Personal' };
+            const catDisplay = catMap[project.category] || 'Project';
+
+            card.innerHTML = `
+                <div class="live-dot" title="Active Project"></div>
+                <div class="card-actions">
+                    <div class="action-btn" title="Copy Link" onclick="copyLink(event, '${project.url}')">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                </div>
+                <div class="card-inner">
+                    <div class="icon-box">${project.icon}</div>
+                    <span class="card-title">${project.title}</span>
+                    <span class="card-category">${catDisplay}</span>
+                </div>
+            `;
+            
+            // Add Interaction Listeners
+            card.addEventListener('mousemove', handleHover);
+            card.addEventListener('mouseleave', resetHover);
+            
+            return card;
+        }
+
+        function renderProjects(filterText = '', category = 'all') {
+            grid.innerHTML = '';
+            
+            const filtered = projects.filter(p => {
+                const matchesSearch = p.title.toLowerCase().includes(filterText.toLowerCase());
+                const matchesCat = category === 'all' || p.category === category || (category === 'excel' && (p.category === 'excel')); 
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted)">No projects found matching criteria.</div>`;
+                return;
+            }
+
+            filtered.forEach((p, idx) => {
+                grid.appendChild(createCard(p, idx));
+            });
+        }
+
+        // --- 3. INTERACTION LAYER (The "Magic") ---
+
+        // 3D Tilt & Glow Effect
+        function handleHover(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Set CSS variable for the Glow effect
+            this.style.setProperty('--mouse-x', `${x}px`);
+            this.style.setProperty('--mouse-y', `${y}px`);
+
+            // Tilt Logic
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            const inner = this.querySelector('.card-inner');
+            inner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        }
+
+        function resetHover() {
+            const inner = this.querySelector('.card-inner');
+            inner.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+        }
+
+        // Copy Link Micro-interaction
+        window.copyLink = function(e, url) {
+            e.preventDefault(); // Stop navigation
+            e.stopPropagation();
+            navigator.clipboard.writeText(url).then(() => {
+                showToast();
+            });
+        };
+
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // --- 4. INITIALIZATION & EVENT LISTENERS ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remove Preloader
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('preloader').remove(), 500);
+            }, 800);
+
+            setGreeting();
+            renderProjects();
+
+            // Search Listener
+            searchInput.addEventListener('input', (e) => {
+                const activeCat = document.querySelector('.filter-btn.active').dataset.filter;
+                renderProjects(e.target.value, activeCat);
+            });
+
+            // Filter Tags Listener
+            document.getElementById('filterContainer').addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    // Update Active State
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    // Filter
+                    renderProjects(searchInput.value, e.target.dataset.filter);
+                }
+            });
+
+            // Background Orb Follower
+            const orb = document.getElementById('cursor-orb');
+            document.addEventListener('mousemove', (e) => {
+                requestAnimationFrame(() => {
+                    orb.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
