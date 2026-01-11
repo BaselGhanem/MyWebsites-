@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+ 
     <style>
         /* --- 1. DESIGN TOKENS --- */
         :root {
@@ -22,25 +22,25 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-highlight: rgba(255, 255, 255, 0.03);
             
-            --primary: #3b82f6;      /* Electric Blue */
+            --primary: #3b82f6;  /* Electric Blue */
             --primary-dim: rgba(59, 130, 246, 0.15);
-            --accent: #8b5cf6;       /* Violet */
-            --success: #10b981;      /* Emerald */
-            --warning: #f59e0b;      /* Amber */
-
+            --accent: #8b5cf6;   /* Violet */
+            --success: #10b981;  /* Emerald */
+            --warning: #f59e0b;  /* Amber */
+ 
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-tertiary: #475569;
-
+ 
             /* Fonts */
             --font-main: 'Cairo', sans-serif;
             --font-code: 'JetBrains Mono', monospace;
-
+ 
             /* Animations */
             --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
         }
-
+ 
         /* --- 2. GLOBAL RESET & BASE --- */
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
         
@@ -57,28 +57,28 @@
                 radial-gradient(circle at top center, rgba(59, 130, 246, 0.08), transparent 40%),
                 linear-gradient(to bottom, transparent, var(--bg-void));
         }
-
+ 
         /* Cinematic Grain Overlay */
         .noise-overlay {
             position: fixed; inset: 0; pointer-events: none; z-index: 9999;
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
-
+ 
         /* --- 3. LAYOUT STRUCTURE --- */
         .viewport {
             width: 100%; max-width: 1200px; padding: 0 20px 40px;
             display: flex; flex-direction: column; gap: 40px;
             position: relative; z-index: 10;
         }
-
+ 
         /* --- 4. HEADER (HUD STYLE) --- */
         header {
             padding-top: 60px; text-align: center;
             display: flex; flex-direction: column; align-items: center;
             animation: slideIn 0.8s var(--ease-out);
         }
-
+ 
         .system-status {
             font-family: var(--font-code); font-size: 0.75rem;
             color: var(--primary); background: var(--primary-dim);
@@ -88,7 +88,7 @@
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
         }
         .status-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
-
+ 
         h1 {
             font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900;
             line-height: 1.1; margin-bottom: 10px;
@@ -96,12 +96,12 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
+ 
         .subtitle {
             font-family: var(--font-code); color: var(--text-secondary);
             font-size: 1rem; opacity: 0.8;
         }
-
+ 
         /* --- 5. COMMAND BAR (STICKY) --- */
         .command-deck {
             position: sticky; top: 20px; z-index: 100;
@@ -114,7 +114,7 @@
             transition: transform 0.3s var(--ease-out), border-color 0.3s;
         }
         .command-deck:focus-within { border-color: rgba(59, 130, 246, 0.4); transform: scale(1.01); }
-
+ 
         .search-unit {
             flex: 1; min-width: 200px; position: relative;
             display: flex; align-items: center;
@@ -141,7 +141,7 @@
             padding: 4px 8px; border-radius: 6px; border: 1px solid var(--glass-border);
             pointer-events: none;
         }
-
+ 
         .filter-deck { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .filter-chip {
             background: transparent; border: 1px solid var(--glass-border);
@@ -155,13 +155,13 @@
             background: var(--primary); border-color: var(--primary);
             color: #fff; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
-
+ 
         /* --- 6. MODULE GRID (CARDS) --- */
         .grid-matrix {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px; margin-top: 20px;
         }
-
+ 
         .module-card {
             position: relative; height: 200px;
             background: var(--bg-panel); border: 1px solid var(--glass-border);
@@ -180,14 +180,14 @@
         }
         .module-card:hover::after { opacity: 1; }
         .module-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.2); }
-
+ 
         /* Card Content */
         .module-body {
             flex: 1; padding: 25px; display: flex; flex-direction: column;
             align-items: flex-start; justify-content: space-between;
             position: relative; z-index: 2;
         }
-
+ 
         .module-header { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; }
         .icon-container {
             width: 48px; height: 48px; border-radius: 14px;
@@ -199,7 +199,7 @@
             background: var(--primary); color: white; border-color: var(--primary);
             transform: scale(1.1) rotate(-5deg); box-shadow: 0 10px 20px var(--primary-dim);
         }
-
+ 
         .module-info h3 {
             font-size: 1.1rem; color: var(--text-primary); margin: 15px 0 5px;
             font-weight: 700;
@@ -208,7 +208,7 @@
             font-size: 0.8rem; color: var(--text-secondary);
             font-family: var(--font-code); text-transform: uppercase; letter-spacing: 0.5px;
         }
-
+ 
         .module-footer {
             width: 100%; display: flex; justify-content: space-between; align-items: center;
             padding-top: 15px; border-top: 1px solid var(--glass-highlight);
@@ -219,26 +219,38 @@
             background: rgba(16, 185, 129, 0.1); color: var(--success);
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
-
+ 
         .external-link-icon {
             color: var(--text-tertiary); transition: 0.3s;
         }
         .module-card:hover .external-link-icon { color: var(--text-primary); transform: translateX(-3px) translateY(-3px); }
-
+ 
         /* Actions Overlay */
         .action-overlay {
             position: absolute; top: 15px; left: 15px; z-index: 10;
+            display: flex; gap: 8px; /* Added gap for buttons */
         }
-        .copy-btn {
+        
+        .circle-btn {
             width: 32px; height: 32px; border-radius: 50%;
             background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border);
             color: var(--text-primary); display: flex; align-items: center; justify-content: center;
             opacity: 0; transform: translateY(-10px); transition: 0.3s;
-            cursor: pointer;
+            cursor: pointer; text-decoration: none;
         }
-        .copy-btn:hover { background: var(--primary); border-color: var(--primary); }
-        .module-card:hover .copy-btn { opacity: 1; transform: translateY(0); }
-
+        
+        .circle-btn:hover { border-color: var(--primary); }
+        .module-card:hover .circle-btn { opacity: 1; transform: translateY(0); }
+ 
+        /* Copy Button specific */
+        .copy-btn:hover { background: var(--primary); }
+        
+        /* Code Button specific */
+        .code-btn:hover { background: var(--accent); border-color: var(--accent); }
+        
+        /* Stagger the buttons appearance */
+        .module-card:hover .code-btn { transition-delay: 0.05s; }
+ 
         /* --- 7. ANIMATIONS --- */
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
@@ -246,14 +258,14 @@
         
         .reveal { animation: fadeInUp 0.5s var(--ease-out) forwards; opacity: 0; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
+ 
         /* --- 8. FOOTER --- */
         footer {
             text-align: center; color: var(--text-tertiary); font-size: 0.9rem;
             padding: 40px 0; border-top: 1px solid var(--glass-border);
             width: 100%; margin-top: auto;
         }
-
+ 
         /* --- 9. UTILS --- */
         .toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
@@ -264,20 +276,22 @@
             transition: 0.4s var(--ease-spring); z-index: 999;
         }
         .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
-
+ 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .kbd-shortcut { display: none; }
             .command-deck { top: 10px; padding: 10px; }
             .filter-deck { padding-bottom: 5px; }
+            /* Show actions on mobile by default or leave hidden until tap? 
+               Let's keep them hidden until interaction to keep it clean */
         }
     </style>
 </head>
 <body>
-
+ 
     <div class="noise-overlay"></div>
-
+ 
     <div class="viewport">
         
         <header>
@@ -288,7 +302,7 @@
             <h1>مشاريع باسل</h1>
             <p class="subtitle">QUANTUM COMMAND CENTER v3.0</p>
         </header>
-
+ 
         <div class="command-deck">
             <div class="search-unit">
                 <i class="fa-solid fa-search search-icon"></i>
@@ -302,21 +316,21 @@
                 <button class="filter-chip" data-filter="tool">Tools</button>
             </div>
         </div>
-
+ 
         <div class="grid-matrix" id="projectsGrid">
             </div>
-
+ 
     </div>
-
+ 
     <footer>
         <p>Architected by Basel Ghanem &copy; 2026</p>
     </footer>
-
+ 
     <div class="toast" id="toast">
         <i class="fa-solid fa-check-circle" style="color:var(--success)"></i>
         <span>Link copied to clipboard</span>
     </div>
-
+ 
     <script>
         /* --- SYSTEM CORE --- */
         
@@ -339,12 +353,12 @@
             { id: 16, title: "Introduction", url: "https://baselghanem.github.io/introduction/", icon: "👋", category: "personal", status: "Info" },
             { id: 17, title: "Xacademy GPT", url: "https://baselghanem.github.io/XacademyChatgpt/", icon: "🤖", category: "tool", status: "AI" }
         ];
-
+ 
         const grid = document.getElementById('projectsGrid');
         const searchInput = document.getElementById('searchInput');
         const greetingEl = document.getElementById('greeting');
         const toast = document.getElementById('toast');
-
+ 
         // 1. Time Awareness Logic
         function updateSystemStatus() {
             const hour = new Date().getHours();
@@ -354,7 +368,7 @@
             else msg = "Good Evening, Basel";
             greetingEl.innerText = msg;
         }
-
+ 
         // 2. Component Builder
         function createModule(project, index) {
             const card = document.createElement('a');
@@ -362,14 +376,26 @@
             card.href = project.url;
             card.style.animationDelay = `${index * 0.05}s`;
             card.classList.add('reveal');
-
+ 
             // Category Beautifier
             const catMap = { excel: 'Data Engine', web: 'Web App', tool: 'SaaS Tool', personal: 'Profile' };
             const catDisplay = catMap[project.category] || project.category;
-
+ 
+            // --- GITHUB LINK GENERATION LOGIC ---
+            // Extracts "RamadaDelivery" from "https://baselghanem.github.io/RamadaDelivery/"
+            const urlParts = project.url.split('/');
+            // The repo name is usually at index 3 for "baselghanem.github.io/RepoName/"
+            // Safe fallback: remove empty strings to handle trailing slash
+            const cleanParts = urlParts.filter(part => part !== "");
+            const repoName = cleanParts[2]; // https: [0], domain [1], repo [2]
+            const githubUrl = `https://github.com/BaselGhanem/${repoName}/blob/main/index.html`;
+ 
             card.innerHTML = `
                 <div class="action-overlay">
-                    <button class="copy-btn" title="Copy Link" onclick="copyLink(event, '${project.url}')">
+                    <a href="${githubUrl}" target="_blank" class="circle-btn code-btn" title="View Source Code" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-code"></i>
+                    </a>
+                    <button class="circle-btn copy-btn" title="Copy Link" onclick="copyLink(event, '${project.url}')">
                         <i class="fa-solid fa-link"></i>
                     </button>
                 </div>
@@ -387,7 +413,7 @@
                     </div>
                 </div>
             `;
-
+ 
             // Mouse Move Spotlight Effect
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
@@ -396,10 +422,10 @@
                 card.style.setProperty('--x', `${x}px`);
                 card.style.setProperty('--y', `${y}px`);
             });
-
+ 
             return card;
         }
-
+ 
         // 3. Rendering Engine
         function renderGrid(query = '', category = 'all') {
             grid.innerHTML = '';
@@ -409,7 +435,7 @@
                 const matchCat = category === 'all' || p.category === category || (category === 'excel' && p.category === 'excel');
                 return matchText && matchCat;
             });
-
+ 
             if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);">
@@ -419,12 +445,12 @@
                 `;
                 return;
             }
-
+ 
             filtered.forEach((p, idx) => {
                 grid.appendChild(createModule(p, idx));
             });
         }
-
+ 
         // 4. Interaction Logic
         window.copyLink = function(e, url) {
             e.preventDefault(); e.stopPropagation();
@@ -433,7 +459,7 @@
                 setTimeout(() => toast.classList.remove('active'), 2500);
             });
         };
-
+ 
         // Keyboard Shortcut (/)
         document.addEventListener('keydown', (e) => {
             if (e.key === '/' && document.activeElement !== searchInput) {
@@ -441,18 +467,18 @@
                 searchInput.focus();
             }
         });
-
+ 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             updateSystemStatus();
             renderGrid();
-
+ 
             // Search & Filter Listeners
             searchInput.addEventListener('input', (e) => {
                 const activeCat = document.querySelector('.filter-chip.active').dataset.filter;
                 renderGrid(e.target.value, activeCat);
             });
-
+ 
             document.getElementById('filterContainer').addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter-chip')) {
                     document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
