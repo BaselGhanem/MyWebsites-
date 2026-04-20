@@ -1,1253 +1,1290 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Basel's Project Hub - Cinematic Digital Experience">
-    <meta name="theme-color" content="#000000">
-    
-    <title>مشاريع باسل | Cinematic Experience</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --bg-base: #000000;
-            --bg-surface: rgba(12, 12, 14, 0.7);
-            --bg-surface-hover: rgba(20, 20, 24, 0.85);
-            --bg-glass: rgba(255, 255, 255, 0.02);
-            --bg-modal: rgba(5, 5, 7, 0.98);
-            
-            --accent-primary: #099999;
-            --accent-glow: rgba(9, 153, 153, 0.4);
-            --accent-secondary: #8b5cf6;
-            --accent-success: #10b981;
-            --accent-warning: #f59e0b;
-            --accent-danger: #ef4444;
-            
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --text-muted: #52525b;
-            
-            --border-glass: rgba(255, 255, 255, 0.06);
-            --border-highlight: rgba(255, 255, 255, 0.12);
-            
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-            --radius-pill: 999px;
-            
-            --ease-cinematic: cubic-bezier(0.2, 0.8, 0.2, 1);
-            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        [data-theme="light"] {
-            --bg-base: #fafafa;
-            --bg-surface: rgba(255, 255, 255, 0.8);
-            --bg-surface-hover: rgba(255, 255, 255, 1);
-            --bg-glass: rgba(0, 0, 0, 0.02);
-            --bg-modal: rgba(250, 250, 250, 0.98);
-            
-            --text-primary: #09090b;
-            --text-secondary: #52525b;
-            --text-muted: #a1a1aa;
-            
-            --border-glass: rgba(0, 0, 0, 0.08);
-            --border-highlight: rgba(0, 0, 0, 0.15);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            font-family: 'Cairo', 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            transition: background-color 0.4s var(--ease-cinematic), color 0.4s var(--ease-cinematic);
-        }
-
-        .ambient-mesh {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            background: 
-                radial-gradient(circle at 15% 0%, var(--accent-glow), transparent 40%),
-                radial-gradient(circle at 85% 100%, rgba(139, 92, 246, 0.15), transparent 40%);
-            filter: blur(80px);
-            opacity: 0.6;
-        }
-
-        .viewport {
-            width: 100%;
-            max-width: 1280px;
-            padding: 0 24px 80px;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .nav-island {
-            margin-top: 24px;
-            background: var(--bg-surface);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glass);
-            border-radius: var(--radius-pill);
-            padding: 8px 16px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            animation: slideDown 0.8s var(--ease-cinematic) forwards;
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        .icon-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s var(--ease-cinematic);
-            display: grid;
-            place-items: center;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .icon-btn:hover {
-            background: var(--bg-glass);
-            color: var(--text-primary);
-            transform: scale(1.05);
-        }
-
-        .hero-section {
-            text-align: center;
-            padding: 100px 0 80px;
-            position: relative;
-            width: 100%;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: heroReveal 1s var(--ease-cinematic) 0.2s forwards;
-            will-change: transform;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: heroReveal 1s var(--ease-cinematic) 0.3s forwards;
-        }
-
-        .stats-container {
-            display: flex;
-            gap: 32px;
-            justify-content: center;
-            margin-top: 40px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: heroReveal 1s var(--ease-cinematic) 0.4s forwards;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .stat-val {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .stat-lbl {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .command-island {
-            position: sticky;
-            top: 24px;
-            z-index: 100;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto 60px;
-            background: var(--bg-surface);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border-glass);
-            border-radius: var(--radius-pill);
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.4s var(--ease-cinematic);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: heroReveal 1s var(--ease-cinematic) 0.5s forwards;
-        }
-
-        .command-island:focus-within {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 40px rgba(9, 153, 153, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .search-area {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        .search-area i {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-
-        .command-island:focus-within .search-area i {
-            color: var(--accent-primary);
-        }
-
-        .search-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1rem;
-            padding: 12px 16px;
-            font-family: inherit;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .kbd-hint {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-glass);
-            padding: 4px 8px;
-            border-radius: 6px;
-            color: var(--text-muted);
-        }
-
-        .filters-area {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding-right: 8px;
-            border-right: 1px solid var(--border-glass);
-        }
-
-        .filter-chip {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            padding: 10px 16px;
-            border-radius: var(--radius-pill);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.3s var(--ease-cinematic);
-            white-space: nowrap;
-        }
-
-        .filter-chip:hover {
-            color: var(--text-primary);
-            background: var(--bg-glass);
-        }
-
-        .filter-chip.active {
-            background: var(--text-primary);
-            color: var(--bg-base);
-        }
-
-        .sort-select {
-            appearance: none;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: var(--radius-pill);
-        }
-        
-        .sort-select:hover {
-            color: var(--text-primary);
-        }
-
-        .sort-select option {
-            background: var(--bg-modal);
-            color: var(--text-primary);
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-            width: 100%;
-        }
-
-        .card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-glass);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.4s var(--ease-cinematic);
-            opacity: 0;
-            will-change: transform, opacity;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            opacity: 0;
-            transition: opacity 0.4s;
-            pointer-events: none;
-        }
-
-        .card:hover {
-            transform: translateY(-4px) scale(1.01);
-            border-color: var(--border-highlight);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
-            background: var(--bg-surface-hover);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            display: grid;
-            place-items: center;
-            font-size: 1.5rem;
-            transition: 0.4s var(--ease-bounce);
-        }
-
-        .card:hover .card-icon {
-            transform: scale(1.1) rotate(-8deg);
-            background: rgba(255,255,255,0.05);
-            border-color: var(--border-highlight);
-        }
-
-        .fav-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.3s var(--ease-bounce);
-            padding: 8px;
-            z-index: 2;
-        }
-
-        .fav-btn:hover {
-            transform: scale(1.2);
-            color: var(--text-secondary);
-        }
-
-        .fav-btn.active {
-            color: var(--accent-warning);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            transition: 0.3s;
-        }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text-muted);
-        }
-
-        .status-dot.online {
-            background: var(--accent-success);
-            box-shadow: 0 0 12px var(--accent-success);
-        }
-
-        .card-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: auto;
-        }
-
-        .tech-badge {
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-glass);
-            color: var(--text-secondary);
-        }
-
-        .card-actions {
-            position: absolute;
-            bottom: 24px;
-            left: 24px;
-            right: 24px;
-            display: flex;
-            gap: 8px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: 0.4s var(--ease-cinematic);
-            z-index: 2;
-        }
-
-        .card:hover .card-actions {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .card:hover .card-tech {
-            opacity: 0;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-glass);
-            background: var(--bg-surface);
-            backdrop-filter: blur(10px);
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            background: var(--border-glass);
-        }
-
-        .btn-primary {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #078080;
-            border-color: #078080;
-        }
-
-        .highlight {
-            color: var(--accent-primary);
-            background: rgba(9, 153, 153, 0.1);
-            border-radius: 4px;
-            padding: 0 2px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s var(--ease-cinematic);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-window {
-            width: 100%;
-            max-width: 1200px;
-            height: 90vh;
-            background: var(--bg-modal);
-            border: 1px solid var(--border-glass);
-            border-radius: var(--radius-md);
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.5s var(--ease-bounce);
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-
-        .modal-overlay.active .modal-window {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-glass);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.02);
-        }
-
-        .browser-dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .browser-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--border-glass);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .iframe-wrapper {
-            flex: 1;
-            position: relative;
-            background: var(--bg-base);
-        }
-
-        .skeleton-loader {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 40px;
-            gap: 20px;
-            background: var(--bg-base);
-            z-index: 2;
-            transition: opacity 0.4s;
-        }
-
-        .skel-line {
-            height: 20px;
-            background: var(--bg-glass);
-            border-radius: 8px;
-            animation: pulse 1.5s infinite var(--ease-cinematic);
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        iframe.loaded {
-            opacity: 1;
-        }
-
-        .admin-drawer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 450px;
-            max-width: 100%;
-            background: var(--bg-surface);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-right: 1px solid var(--border-glass);
-            z-index: 1100;
-            transform: translateX(-100%);
-            transition: transform 0.5s var(--ease-cinematic);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .admin-drawer.open {
-            transform: translateX(0);
-        }
-
-        .admin-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border-glass);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .json-editor {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--accent-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            padding: 24px;
-            resize: none;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-
-        .admin-footer {
-            padding: 24px;
-            border-top: 1px solid var(--border-glass);
-            display: flex;
-            gap: 12px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translate(-50%, 100px);
-            background: var(--text-primary);
-            color: var(--bg-base);
-            padding: 12px 24px;
-            border-radius: var(--radius-pill);
-            font-weight: 600;
-            font-size: 0.9rem;
-            opacity: 0;
-            transition: all 0.5s var(--ease-bounce);
-            z-index: 2000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .toast.show {
-            transform: translate(-50%, 0);
-            opacity: 1;
-        }
-
-        @keyframes heroReveal {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideDown {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .command-island {
-                flex-direction: column;
-                border-radius: var(--radius-md);
-                padding: 16px;
-                gap: 16px;
-            }
-            .search-area { padding: 0 8px; }
-            .filters-area {
-                border-right: none;
-                border-top: 1px solid var(--border-glass);
-                padding-top: 16px;
-                padding-right: 0;
-                width: 100%;
-                overflow-x: auto;
-                scrollbar-width: none;
-            }
-            .filters-area::-webkit-scrollbar { display: none; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .card:hover { transform: translateY(-2px); }
-            .card-actions { opacity: 1; transform: none; position: static; margin-top: 24px; }
-            .card-tech { display: none; }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Basel's Project Hub - Cinematic Digital Experience">
+    <meta name="theme-color" content="#000000">
+    
+    <title>مشاريع باسل | Cinematic Experience</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-base: #000000;
+            --bg-surface: rgba(12, 12, 14, 0.7);
+            --bg-surface-hover: rgba(20, 20, 24, 0.85);
+            --bg-glass: rgba(255, 255, 255, 0.02);
+            --bg-modal: rgba(5, 5, 7, 0.98);
+            
+            --accent-primary: #099999;
+            --accent-glow: rgba(9, 153, 153, 0.4);
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+            
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --border-highlight: rgba(255, 255, 255, 0.12);
+            
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --radius-pill: 999px;
+            
+            --ease-cinematic: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-base: #fafafa;
+            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-surface-hover: rgba(255, 255, 255, 1);
+            --bg-glass: rgba(0, 0, 0, 0.02);
+            --bg-modal: rgba(250, 250, 250, 0.98);
+            
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #a1a1aa;
+            
+            --border-glass: rgba(0, 0, 0, 0.08);
+            --border-highlight: rgba(0, 0, 0, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Cairo', 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background-color 0.4s var(--ease-cinematic), color 0.4s var(--ease-cinematic);
+        }
+
+        .ambient-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 15% 0%, var(--accent-glow), transparent 40%),
+                radial-gradient(circle at 85% 100%, rgba(139, 92, 246, 0.15), transparent 40%);
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .viewport {
+            width: 100%;
+            max-width: 1280px;
+            padding: 0 24px 80px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-island {
+            margin-top: 24px;
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-pill);
+            padding: 8px 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.8s var(--ease-cinematic) forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s var(--ease-cinematic);
+            display: grid;
+            place-items: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 100px 0 80px;
+            position: relative;
+            width: 100%;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroReveal 1s var(--ease-cinematic) 0.2s forwards;
+            will-change: transform;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroReveal 1s var(--ease-cinematic) 0.3s forwards;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroReveal 1s var(--ease-cinematic) 0.4s forwards;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-val {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .command-island {
+            position: sticky;
+            top: 24px;
+            z-index: 100;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            background: var(--bg-surface);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-pill);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s var(--ease-cinematic);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroReveal 1s var(--ease-cinematic) 0.5s forwards;
+        }
+
+        .command-island:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 40px rgba(9, 153, 153, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .search-area i {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .command-island:focus-within .search-area i {
+            color: var(--accent-primary);
+        }
+
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            padding: 12px 16px;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .kbd-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+        }
+
+        .filters-area {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding-right: 8px;
+            border-right: 1px solid var(--border-glass);
+        }
+
+        .filter-chip {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s var(--ease-cinematic);
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover {
+            color: var(--text-primary);
+            background: var(--bg-glass);
+        }
+
+        .filter-chip.active {
+            background: var(--text-primary);
+            color: var(--bg-base);
+        }
+
+        .sort-select {
+            appearance: none;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: var(--radius-pill);
+        }
+        
+        .sort-select:hover {
+            color: var(--text-primary);
+        }
+
+        .sort-select option {
+            background: var(--bg-modal);
+            color: var(--text-primary);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.4s var(--ease-cinematic);
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: var(--border-highlight);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            background: var(--bg-surface-hover);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            transition: 0.4s var(--ease-bounce);
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(-8deg);
+            background: rgba(255,255,255,0.05);
+            border-color: var(--border-highlight);
+        }
+
+        .fav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s var(--ease-bounce);
+            padding: 8px;
+            z-index: 2;
+        }
+
+        .fav-btn:hover {
+            transform: scale(1.2);
+            color: var(--text-secondary);
+        }
+
+        .fav-btn.active {
+            color: var(--accent-warning);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            transition: 0.3s;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .status-dot.online {
+            background: var(--accent-success);
+            box-shadow: 0 0 12px var(--accent-success);
+        }
+
+        .card-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .tech-badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+        }
+
+        .card-actions {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.4s var(--ease-cinematic);
+            z-index: 2;
+        }
+
+        .card:hover .card-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover .card-tech {
+            opacity: 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+            background: var(--bg-surface);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--border-glass);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #078080;
+            border-color: #078080;
+        }
+
+        .highlight {
+            color: var(--accent-primary);
+            background: rgba(9, 153, 153, 0.1);
+            border-radius: 4px;
+            padding: 0 2px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s var(--ease-cinematic);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-window {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: var(--bg-modal);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.5s var(--ease-bounce);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-window {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-glass);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .iframe-wrapper {
+            flex: 1;
+            position: relative;
+            background: var(--bg-base);
+        }
+
+        .skeleton-loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            gap: 20px;
+            background: var(--bg-base);
+            z-index: 2;
+            transition: opacity 0.4s;
+        }
+
+        .skel-line {
+            height: 20px;
+            background: var(--bg-glass);
+            border-radius: 8px;
+            animation: pulse 1.5s infinite var(--ease-cinematic);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        iframe.loaded {
+            opacity: 1;
+        }
+
+        .admin-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 450px;
+            max-width: 100%;
+            background: var(--bg-surface);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-right: 1px solid var(--border-glass);
+            z-index: 1100;
+            transform: translateX(-100%);
+            transition: transform 0.5s var(--ease-cinematic);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-drawer.open {
+            transform: translateX(0);
+        }
+
+        .admin-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .json-editor {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--accent-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 24px;
+            resize: none;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .admin-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            gap: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translate(-50%, 100px);
+            background: var(--text-primary);
+            color: var(--bg-base);
+            padding: 12px 24px;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.5s var(--ease-bounce);
+            z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        @keyframes heroReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .command-island {
+                flex-direction: column;
+                border-radius: var(--radius-md);
+                padding: 16px;
+                gap: 16px;
+            }
+            .search-area { padding: 0 8px; }
+            .filters-area {
+                border-right: none;
+                border-top: 1px solid var(--border-glass);
+                padding-top: 16px;
+                padding-right: 0;
+                width: 100%;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+            .filters-area::-webkit-scrollbar { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .card:hover { transform: translateY(-2px); }
+            .card-actions { opacity: 1; transform: none; position: static; margin-top: 24px; }
+            .card-tech { display: none; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="ambient-mesh"></div>
+    <div class="ambient-mesh"></div>
 
-    <div class="viewport">
-        
-        <nav class="nav-island">
-            <button class="icon-btn" id="langToggle">EN</button>
-            <button class="icon-btn" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
-        </nav>
+    <div class="viewport">
+        
+        <nav class="nav-island">
+            <button class="icon-btn" id="langToggle">EN</button>
+            <button class="icon-btn" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+        </nav>
 
-        <section class="hero-section" id="hero">
-            <h1 class="hero-title" data-key="title">منصة باسل الرقمية</h1>
-            <p class="hero-subtitle" data-key="subtitle">تجربة رقمية تفاعلية تعكس دقة البيانات وسلاسة التصميم في بيئة متطورة.</p>
-            
-            <div class="stats-container" id="statsStrip"></div>
-        </section>
+        <section class="hero-section" id="hero">
+            <h1 class="hero-title" data-key="title">منصة باسل الرقمية</h1>
+            <p class="hero-subtitle" data-key="subtitle">تجربة رقمية تفاعلية تعكس دقة البيانات وسلاسة التصميم في بيئة متطورة.</p>
+            
+            <div class="stats-container" id="statsStrip"></div>
+        </section>
 
-        <div class="command-island">
-            <div class="search-area">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="searchInput" class="search-input" placeholder="بحث ذكي... (جرب 'ذكاء اصطناعي' أو 'Excel')" autocomplete="off">
-                <span class="kbd-hint">/</span>
-            </div>
-            
-            <div class="filters-area" id="filterContainer">
-                <select id="sortSelect" class="sort-select">
-                    <option value="default">الترتيب الافتراضي</option>
-                    <option value="name">أ - ي</option>
-                    <option value="status">الحالة</option>
-                    <option value="newest">الأحدث</option>
-                </select>
-                <button class="filter-chip active" data-filter="all" data-key="all">الكل</button>
-                <button class="filter-chip" data-filter="favorites"><i class="fa-solid fa-star"></i></button>
-                <button class="filter-chip" data-filter="web">Web</button>
-                <button class="filter-chip" data-filter="excel">Excel</button>
-                <button class="filter-chip" data-filter="tool">Tools</button>
-            </div>
-        </div>
+        <div class="command-island">
+            <div class="search-area">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="بحث ذكي... (جرب 'ذكاء اصطناعي' أو 'Excel')" autocomplete="off">
+                <span class="kbd-hint">/</span>
+            </div>
+            
+            <div class="filters-area" id="filterContainer">
+                <select id="sortSelect" class="sort-select">
+                    <option value="default">الترتيب الافتراضي</option>
+                    <option value="name">أ - ي</option>
+                    <option value="status">الحالة</option>
+                    <option value="newest">الأحدث</option>
+                </select>
+                <button class="filter-chip active" data-filter="all" data-key="all">الكل</button>
+                <button class="filter-chip" data-filter="favorites"><i class="fa-solid fa-star"></i></button>
+                <button class="filter-chip" data-filter="web">Web</button>
+                <button class="filter-chip" data-filter="excel">Excel</button>
+                <button class="filter-chip" data-filter="tool">Tools</button>
+            </div>
+        </div>
 
-        <div class="bento-grid" id="projectsGrid"></div>
+        <div class="bento-grid" id="projectsGrid"></div>
 
-    </div>
+    </div>
 
-    <div class="modal-overlay" id="previewModal">
-        <div class="modal-window">
-            <div class="modal-header">
-                <div class="browser-dots">
-                    <div class="browser-dot" style="background:#ef4444"></div>
-                    <div class="browser-dot" style="background:#f59e0b"></div>
-                    <div class="browser-dot" style="background:#10b981"></div>
-                </div>
-                <div class="modal-actions">
-                    <a href="#" id="modalExternal" target="_blank" class="btn"><i class="fa-solid fa-external-link-alt"></i></a>
-                    <button class="btn" onclick="App.ui.closeModal()"><i class="fa-solid fa-times"></i></button>
-                </div>
-            </div>
-            <div class="iframe-wrapper">
-                <div class="skeleton-loader" id="skeletonLoader">
-                    <div class="skel-line" style="width: 40%; height: 40px;"></div>
-                    <div class="skel-line" style="width: 100%;"></div>
-                    <div class="skel-line" style="width: 80%;"></div>
-                    <div class="skel-line" style="width: 90%;"></div>
-                    <div class="skel-line" style="width: 60%; margin-top: 40px;"></div>
-                </div>
-                <iframe id="previewFrame" src=""></iframe>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div class="browser-dots">
+                    <div class="browser-dot" style="background:#ef4444"></div>
+                    <div class="browser-dot" style="background:#f59e0b"></div>
+                    <div class="browser-dot" style="background:#10b981"></div>
+                </div>
+                <div class="modal-actions">
+                    <a href="#" id="modalExternal" target="_blank" class="btn"><i class="fa-solid fa-external-link-alt"></i></a>
+                    <button class="btn" onclick="App.ui.closeModal()"><i class="fa-solid fa-times"></i></button>
+                </div>
+            </div>
+            <div class="iframe-wrapper">
+                <div class="skeleton-loader" id="skeletonLoader">
+                    <div class="skel-line" style="width: 40%; height: 40px;"></div>
+                    <div class="skel-line" style="width: 100%;"></div>
+                    <div class="skel-line" style="width: 80%;"></div>
+                    <div class="skel-line" style="width: 90%;"></div>
+                    <div class="skel-line" style="width: 60%; margin-top: 40px;"></div>
+                </div>
+                <iframe id="previewFrame" src=""></iframe>
+            </div>
+        </div>
+    </div>
 
-    <div class="admin-drawer" id="adminPanel">
-        <div class="admin-header">
-            <h3 style="font-size:1.1rem; font-weight:600;"><i class="fa-solid fa-terminal"></i> Database Protocol</h3>
-            <button class="icon-btn" onclick="App.admin.toggle()"><i class="fa-solid fa-times"></i></button>
-        </div>
-        <textarea id="jsonEditor" class="json-editor"></textarea>
-        <div class="admin-footer">
-            <button class="btn btn-primary" onclick="App.admin.saveData()">Deploy Sync</button>
-            <button class="btn" style="color:var(--accent-danger); border-color:rgba(239,68,68,0.2)" onclick="App.admin.resetData()">Factory Reset</button>
-        </div>
-    </div>
+    <div class="admin-drawer" id="adminPanel">
+        <div class="admin-header">
+            <h3 style="font-size:1.1rem; font-weight:600;"><i class="fa-solid fa-terminal"></i> Database Protocol</h3>
+            <button class="icon-btn" onclick="App.admin.toggle()"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <textarea id="jsonEditor" class="json-editor"></textarea>
+        <div class="admin-footer">
+            <button class="btn btn-primary" onclick="App.admin.saveData()">Deploy Sync</button>
+            <button class="btn" style="color:var(--accent-danger); border-color:rgba(239,68,68,0.2)" onclick="App.admin.resetData()">Factory Reset</button>
+        </div>
+    </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>
 
-    <script>
-        const Translations = {
-            ar: {
-                title: "منصة باسل الرقمية",
-                subtitle: "تجربة رقمية تفاعلية تعكس دقة البيانات وسلاسة التصميم في بيئة متطورة.",
-                all: "الكل",
-                searchPlaceholder: "بحث ذكي... (جرب 'ذكاء اصطناعي' أو 'Excel')",
-                statsTotal: "الأنظمة",
-                statsLive: "تعمل الآن",
-                statsAi: "ذكاء اصطناعي"
-            },
-            en: {
-                title: "Basel's Digital Platform",
-                subtitle: "An interactive digital experience reflecting data precision and design fluidity.",
-                all: "All",
-                searchPlaceholder: "Smart search... (Try 'AI' or 'Excel')",
-                statsTotal: "Systems",
-                statsLive: "Live Deployments",
-                statsAi: "AI Modules"
-            }
-        };
+    <script>
+        const Translations = {
+            ar: {
+                title: "منصة باسل الرقمية",
+                subtitle: "تجربة رقمية تفاعلية تعكس دقة البيانات وسلاسة التصميم في بيئة متطورة.",
+                all: "الكل",
+                searchPlaceholder: "بحث ذكي... (جرب 'ذكاء اصطناعي' أو 'Excel')",
+                statsTotal: "الأنظمة",
+                statsLive: "تعمل الآن",
+                statsAi: "ذكاء اصطناعي"
+            },
+            en: {
+                title: "Basel's Digital Platform",
+                subtitle: "An interactive digital experience reflecting data precision and design fluidity.",
+                all: "All",
+                searchPlaceholder: "Smart search... (Try 'AI' or 'Excel')",
+                statsTotal: "Systems",
+                statsLive: "Live Deployments",
+                statsAi: "AI Modules"
+            }
+        };
 
-        const DefaultData = [
-            { id: 1, title: "Ordering System", category: "web", status: "Live", icon: "🛒", url: "https://baselghanem.github.io/OrderingSystem/", repoUrl: "https://github.com/BaselGhanem/OrderingSystem", tech: ["Firebase", "JS"], keywords: ["order", "system"] },
-            { id: 2, title: "FMCG Training", category: "web", status: "Live", icon: "🚀", url: "https://baselghanem.github.io/FMCGTraining/", repoUrl: "https://github.com/BaselGhanem/FMCGTraining", tech: ["HTML", "CSS"], keywords: ["training"] },
-            { id: 3, title: "Best Acheivers", category: "web", status: "Live", icon: "🏆", url: "https://baselghanem.github.io/Best-Acheivers/", repoUrl: "https://github.com/BaselGhanem/Best-Acheivers", tech: ["HTML", "CSS"], keywords: ["achievers"] },
-            { id: 4, title: "Golden Peak", category: "web", status: "Live", icon: "🏔️", url: "https://baselghanem.github.io/GoldenPeak/", repoUrl: "https://github.com/BaselGhanem/GoldenPeak", tech: ["JS", "Design"], keywords: ["peak", "golden"] },
-            { id: 5, title: "Pharmacloud", category: "web", status: "Live", icon: "☁️", url: "https://baselghanem.github.io/Pharmacloud/", repoUrl: "https://github.com/BaselGhanem/Pharmacloud", tech: ["HTML", "Cloud"], keywords: ["pharma", "cloud"] },
-            { id: 6, title: "Darza", category: "web", status: "Live", icon: "👗", url: "https://baselghanem.github.io/Darza/", repoUrl: "https://github.com/BaselGhanem/Darza", tech: ["HTML", "CSS"], keywords: ["darza"] },
-            { id: 7, title: "Xacademy", category: "web", status: "Live", icon: "🎓", url: "https://baselghanem.github.io/Xacademy/", repoUrl: "https://github.com/BaselGhanem/Xacademy", tech: ["HTML", "JS"], keywords: ["academy"] },
-            { id: 8, title: "Schedule", category: "tool", status: "Live", icon: "📅", url: "https://baselghanem.github.io/Schedule/", repoUrl: "https://github.com/BaselGhanem/Schedule", tech: ["HTML", "JS"], keywords: ["schedule"] },
-            { id: 9, title: "Money Brain", category: "tool", status: "Live", icon: "💸", url: "https://baselghanem.github.io/Money-Brain/", repoUrl: "https://github.com/BaselGhanem/Money-Brain", tech: ["TypeScript"], keywords: ["finance"] },
-            { id: 10, title: "Sales Impact", category: "excel", status: "Live", icon: "📈", url: "https://baselghanem.github.io/Sales/", repoUrl: "https://github.com/BaselGhanem/Sales", tech: ["Excel", "Data"], keywords: ["sales"] },
-            { id: 11, title: "AI Tools Hub", category: "tool", status: "AI", icon: "🛠️", url: "https://baselghanem.github.io/AI-Tools/", repoUrl: "https://github.com/BaselGhanem/AI-Tools", tech: ["AI", "JS"], keywords: ["ai", "tools"] },
-            { id: 12, title: "System Prompts", category: "tool", status: "AI", icon: "⚙️", url: "https://baselghanem.github.io/system-prompts-and-models-of-ai-tools/", repoUrl: "https://github.com/BaselGhanem/system-prompts-and-models-of-ai-tools", tech: ["AI", "Prompts"], keywords: ["prompts"] },
-            { id: 13, title: "Ramadan 26", category: "web", status: "Live", icon: "🕌", url: "https://baselghanem.github.io/Ramadan26/", repoUrl: "https://github.com/BaselGhanem/Ramadan26", tech: ["HTML", "Design"], keywords: ["ramadan"] },
-            { id: 14, title: "Layout Maker", category: "tool", status: "Live", icon: "📐", url: "https://baselghanem.github.io/LayoutMaker/", repoUrl: "https://github.com/BaselGhanem/LayoutMaker", tech: ["HTML", "CSS"], keywords: ["layout"] },
-            { id: 15, title: "Analytics Strategy", category: "tool", status: "Live", icon: "🎯", url: "https://baselghanem.github.io/AnalyticsStrategy/", repoUrl: "https://github.com/BaselGhanem/AnalyticsStrategy", tech: ["Data", "Strategy"], keywords: ["analytics"] },
-            { id: 16, title: "Excel Arena", category: "excel", status: "Live", icon: "🏟️", url: "https://baselghanem.github.io/ExcelArena/", repoUrl: "https://github.com/BaselGhanem/ExcelArena", tech: ["Excel", "Practice"], keywords: ["arena"] },
-            { id: 17, title: "Vlookup Master", category: "excel", status: "Live", icon: "🔍", url: "https://baselghanem.github.io/Vlookup/", repoUrl: "https://github.com/BaselGhanem/Vlookup", tech: ["Excel"], keywords: ["vlookup"] },
-            { id: 18, title: "CV Builder", category: "tool", status: "Live", icon: "📄", url: "https://baselghanem.github.io/CVBuilder/", repoUrl: "https://github.com/BaselGhanem/CVBuilder", tech: ["JS"], keywords: ["cv", "resume"] },
-            { id: 19, title: "Whatsapp Tool", category: "tool", status: "Live", icon: "💬", url: "https://baselghanem.github.io/Whatsapp/", repoUrl: "https://github.com/BaselGhanem/Whatsapp", tech: ["API"], keywords: ["whatsapp"] },
-            { id: 20, title: "PowerBI Intro", category: "excel", status: "Live", icon: "📊", url: "https://baselghanem.github.io/PowerBi-Intro/", repoUrl: "https://github.com/BaselGhanem/PowerBi-Intro", tech: ["PowerBI"], keywords: ["bi", "intro"] },
-            { id: 21, title: "Azkari", category: "web", status: "Live", icon: "🤲", url: "https://baselghanem.github.io/Azkari/", repoUrl: "https://github.com/BaselGhanem/Azkari", tech: ["JS"], keywords: ["azkari"] },
-            { id: 22, title: "Portfolio", category: "web", status: "Live", icon: "👨‍💻", url: "https://baselghanem.github.io/Portfolio/", repoUrl: "https://github.com/BaselGhanem/Portfolio", tech: ["HTML"], keywords: ["portfolio"] },
-            { id: 23, title: "Time Intelligence", category: "excel", status: "Live", icon: "⏱️", url: "https://baselghanem.github.io/TimeIntelligence/", repoUrl: "https://github.com/BaselGhanem/TimeIntelligence", tech: ["DAX", "Excel"], keywords: ["time"] },
-            { id: 24, title: "Ramada Delivery", category: "web", status: "Live", icon: "🚚", url: "https://baselghanem.github.io/RamadaDelivery/", repoUrl: "https://github.com/BaselGhanem/RamadaDelivery", tech: ["HTML"], keywords: ["delivery"] },
-            { id: 25, title: "Doctor List", category: "tool", status: "Live", icon: "🩺", url: "https://baselghanem.github.io/DoctorList/", repoUrl: "https://github.com/BaselGhanem/DoctorList", tech: ["JS"], keywords: ["doctor"] },
-            { id: 26, title: "Excel Course DAD", category: "excel", status: "Live", icon: "📘", url: "https://baselghanem.github.io/ExcelCourseDAD/", repoUrl: "https://github.com/BaselGhanem/ExcelCourseDAD", tech: ["Excel"], keywords: ["dad"] },
-            { id: 27, title: "Finance App", category: "tool", status: "Live", icon: "💰", url: "https://baselghanem.github.io/finance-app/", repoUrl: "https://github.com/BaselGhanem/finance-app", tech: ["React"], keywords: ["finance"] },
-            { id: 28, title: "Eduvision", category: "web", status: "Live", icon: "🔭", url: "https://baselghanem.github.io/Eduvision/", repoUrl: "https://github.com/BaselGhanem/Eduvision", tech: ["HTML"], keywords: ["edu"] },
-            { id: 29, title: "Linkedin Dashboards", category: "excel", status: "Live", icon: "🔗", url: "https://baselghanem.github.io/LinkedinDashboards/", repoUrl: "https://github.com/BaselGhanem/LinkedinDashboards", tech: ["PowerBI"], keywords: ["linkedin"] },
-            { id: 30, title: "51 Rooms", category: "web", status: "Live", icon: "🏠", url: "https://baselghanem.github.io/51Rooms/", repoUrl: "https://github.com/BaselGhanem/51Rooms", tech: ["HTML"], keywords: ["rooms"] },
-            { id: 31, title: "Excel 10 JOD", category: "excel", status: "Live", icon: "💵", url: "https://baselghanem.github.io/Excel10JOD/", repoUrl: "https://github.com/BaselGhanem/Excel10JOD", tech: ["Excel"], keywords: ["jod"] },
-            { id: 32, title: "Xacademy ChatGPT", category: "tool", status: "AI", icon: "🤖", url: "https://baselghanem.github.io/XacademyChatgpt/", repoUrl: "https://github.com/BaselGhanem/XacademyChatgpt", tech: ["AI"], keywords: ["chat"] },
-            { id: 33, title: "Vlookup Dad", category: "excel", status: "Live", icon: "📁", url: "https://baselghanem.github.io/Vlookup-Dad/", repoUrl: "https://github.com/BaselGhanem/Vlookup-Dad", tech: ["Excel"], keywords: ["vlookup"] },
-            { id: 34, title: "Dana Shishani", category: "web", status: "Live", icon: "👤", url: "https://baselghanem.github.io/DanaShishani/", repoUrl: "https://github.com/BaselGhanem/DanaShishani", tech: ["Portfolio"], keywords: ["dana"] },
-            { id: 35, title: "Story from Palestine", category: "web", status: "Live", icon: "🇵🇸", url: "https://baselghanem.github.io/StoriesfromPalestine-Tammon/", repoUrl: "https://github.com/BaselGhanem/StoriesfromPalestine-Tammon", tech: ["HTML"], keywords: ["palestine"] },
-            { id: 36, title: "Zaid Numbers", category: "tool", status: "Live", icon: "🔢", url: "https://baselghanem.github.io/Zaidnumbers/", repoUrl: "https://github.com/BaselGhanem/Zaidnumbers", tech: ["JS"], keywords: ["zaid"] },
-            { id: 37, title: "Time by AI", category: "tool", status: "AI", icon: "⏲️", url: "https://baselghanem.github.io/TimeByAiStudio/", repoUrl: "https://github.com/BaselGhanem/TimeByAiStudio", tech: ["AI"], keywords: ["time"] },
-            { id: 38, title: "MIXIF", category: "excel", status: "Live", icon: "🔀", url: "https://baselghanem.github.io/MIXIF/", repoUrl: "https://github.com/BaselGhanem/MIXIF", tech: ["Excel"], keywords: ["mixif"] }
-        ];
+        // قاعدة البيانات الموسعة تشمل جميع المواقع الجديدة
+        const DefaultData = [
+            // المشاريع الأصلية (1-38)
+            { id: 1, title: "FMCG Training", category: "web", status: "Live", icon: "🚀", url: "https://baselghanem.github.io/FMCGTraining/", repoUrl: "https://github.com/BaselGhanem/FMCGTraining/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["training"] },
+            { id: 2, title: "Best Acheivers", category: "web", status: "Live", icon: "🏆", url: "https://baselghanem.github.io/Best-Acheivers/", repoUrl: "https://github.com/BaselGhanem/Best-Acheivers/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["achievers"] },
+            { id: 3, title: "Ramada Delivery", category: "web", status: "Live", icon: "🚚", url: "https://baselghanem.github.io/RamadaDelivery/", repoUrl: "https://github.com/BaselGhanem/RamadaDelivery/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["delivery"] },
+            { id: 4, title: "Xacademy", category: "web", status: "Live", icon: "🎓", url: "https://baselghanem.github.io/Xacademy/", repoUrl: "https://github.com/BaselGhanem/Xacademy/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["academy", "course"] },
+            { id: 5, title: "Portfolio", category: "personal", status: "Live", icon: "👨‍💻", url: "https://baselghanem.github.io/Portfolio/", repoUrl: "https://github.com/BaselGhanem/Portfolio/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["portfolio", "cv"] },
+            { id: 6, title: "Schedule", category: "tool", status: "Live", icon: "📅", url: "https://baselghanem.github.io/Schedule/", repoUrl: "https://github.com/BaselGhanem/Schedule/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["schedule", "time"] },
+            { id: 7, title: "Basel To Do", category: "tool", status: "Live", icon: "✅", url: "https://baselghanem.github.io/Basel_To_Do/", repoUrl: "https://github.com/BaselGhanem/Basel_To_Do/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["todo", "task"] },
+            { id: 8, title: "Money Brain", category: "tool", status: "Live", icon: "💸", url: "https://baselghanem.github.io/Money-Brain/", repoUrl: "https://github.com/BaselGhanem/Money-Brain/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["finance", "money"] },
+            { id: 9, title: "Xacademy Chatgpt", category: "tool", status: "AI", icon: "🤖", url: "https://baselghanem.github.io/XacademyChatgpt/", repoUrl: "https://github.com/BaselGhanem/XacademyChatgpt/blob/main/index.html", tech: ["API", "AI"], keywords: ["ai", "chat", "gpt"] },
+            { id: 10, title: "Sales", category: "excel", status: "Live", icon: "📈", url: "https://baselghanem.github.io/Sales/", repoUrl: "https://github.com/BaselGhanem/Sales/blob/main/index.html", tech: ["Excel", "Data"], keywords: ["sales", "data"] },
+            { id: 11, title: "Basics 1", category: "excel", status: "Live", icon: "📊", url: "https://baselghanem.github.io/Basics1/", repoUrl: "https://github.com/BaselGhanem/Basics1/blob/main/index.html", tech: ["Excel"], keywords: ["basics", "excel"] },
+            { id: 12, title: "Charts", category: "excel", status: "Live", icon: "📉", url: "https://baselghanem.github.io/Charts/", repoUrl: "https://github.com/BaselGhanem/Charts/blob/main/index.html", tech: ["Excel", "Data"], keywords: ["charts", "visualization"] },
+            { id: 13, title: "Ramadan", category: "web", status: "Live", icon: "🌙", url: "https://baselghanem.github.io/Ramadan/", repoUrl: "https://github.com/BaselGhanem/Ramadan/blob/main/index.html", tech: ["HTML"], keywords: ["ramadan", "islamic"] },
+            { id: 14, title: "Excel Course Introduction", category: "excel", status: "Live", icon: "🎓", url: "https://baselghanem.github.io/Excel-Course-Introduction/", repoUrl: "https://github.com/BaselGhanem/Excel-Course-Introduction/blob/main/index.html", tech: ["Excel", "Course"], keywords: ["excel", "course"] },
+            { id: 15, title: "Time Intelligence", category: "excel", status: "Live", icon: "⏱️", url: "https://baselghanem.github.io/TimeIntelligence/", repoUrl: "https://github.com/BaselGhanem/TimeIntelligence/blob/main/index.html", tech: ["Excel", "DAX"], keywords: ["time", "intelligence"] },
+            { id: 16, title: "Learning Path Sum Group", category: "excel", status: "Live", icon: "📚", url: "https://baselghanem.github.io/LearningPath-SumGroup/", repoUrl: "https://github.com/BaselGhanem/LearningPath-SumGroup/blob/main/index.html", tech: ["Excel"], keywords: ["learning", "sum"] },
+            { id: 17, title: "My Websites", category: "personal", status: "Live", icon: "🌐", url: "https://baselghanem.github.io/MyWebsites-/", repoUrl: "https://github.com/BaselGhanem/MyWebsites-/blob/main/index.html", tech: ["HTML"], keywords: ["websites", "collection"] },
+            { id: 18, title: "Time By AI Studio", category: "tool", status: "AI", icon: "⏲️", url: "https://baselghanem.github.io/TimeByAiStudio/", repoUrl: "https://github.com/BaselGhanem/TimeByAiStudio/blob/main/index.html", tech: ["AI", "JS"], keywords: ["ai", "time"] },
+            { id: 19, title: "CV Builder", category: "tool", status: "Live", icon: "📄", url: "https://baselghanem.github.io/CVBuilder/", repoUrl: "https://github.com/BaselGhanem/CVBuilder/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["cv", "resume"] },
+            { id: 20, title: "Day 1", category: "web", status: "Live", icon: "1️⃣", url: "https://baselghanem.github.io/Day1/", repoUrl: "https://github.com/BaselGhanem/Day1/blob/main/index.html", tech: ["HTML"], keywords: ["day1"] },
+            { id: 21, title: "Dana Shishani", category: "web", status: "Live", icon: "👤", url: "https://baselghanem.github.io/DanaShishani/", repoUrl: "https://github.com/BaselGhanem/DanaShishani/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["dana", "portfolio"] },
+            { id: 22, title: "Finance App", category: "tool", status: "Live", icon: "💰", url: "https://baselghanem.github.io/finance-app/", repoUrl: "https://github.com/BaselGhanem/finance-app/blob/main/index.html", tech: ["React", "JS"], keywords: ["finance", "app"] },
+            { id: 23, title: "Excel Course DAD", category: "excel", status: "Live", icon: "📊", url: "https://baselghanem.github.io/ExcelCourseDAD/", repoUrl: "https://github.com/BaselGhanem/ExcelCourseDAD/blob/main/index.html", tech: ["Excel", "Course"], keywords: ["excel", "dad"] },
+            { id: 24, title: "Farah", category: "web", status: "Live", icon: "🌸", url: "https://baselghanem.github.io/Farah/", repoUrl: "https://github.com/BaselGhanem/Farah/blob/main/index.html", tech: ["HTML"], keywords: ["farah"] },
+            { id: 25, title: "Vlookup", category: "excel", status: "Live", icon: "🔍", url: "https://baselghanem.github.io/Vlookup/", repoUrl: "https://github.com/BaselGhanem/Vlookup/blob/main/index.html", tech: ["Excel", "Formulas"], keywords: ["vlookup", "excel"] },
+            { id: 26, title: "Website", category: "personal", status: "Live", icon: "🌐", url: "https://baselghanem.github.io/Website/", repoUrl: "https://github.com/BaselGhanem/Website/blob/main/index.html", tech: ["HTML"], keywords: ["website"] },
+            { id: 27, title: "Azkari", category: "web", status: "Live", icon: "🤲", url: "https://baselghanem.github.io/Azkari/", repoUrl: "https://github.com/BaselGhanem/Azkari/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["azkari", "islamic"] },
+            { id: 28, title: "S5 Count Group", category: "excel", status: "Live", icon: "🔢", url: "https://baselghanem.github.io/S5-Countgroup/", repoUrl: "https://github.com/BaselGhanem/S5-Countgroup/blob/main/index.html", tech: ["Excel"], keywords: ["count", "group"] },
+            { id: 29, title: "Session 3 Conditional Formatting", category: "excel", status: "Live", icon: "🎨", url: "https://baselghanem.github.io/Session3-Conditional-Formatting/", repoUrl: "https://github.com/BaselGhanem/Session3-Conditional-Formatting/blob/main/index.html", tech: ["Excel"], keywords: ["formatting", "excel"] },
+            { id: 30, title: "MIXIF", category: "excel", status: "Live", icon: "🔀", url: "https://baselghanem.github.io/MIXIF/", repoUrl: "https://github.com/BaselGhanem/MIXIF/blob/main/index.html", tech: ["Excel"], keywords: ["mixif", "formulas"] },
+            { id: 31, title: "365 Exam", category: "excel", status: "Live", icon: "📝", url: "https://baselghanem.github.io/365-Exam/", repoUrl: "https://github.com/BaselGhanem/365-Exam/blob/main/index.html", tech: ["Excel"], keywords: ["exam", "365"] },
+            { id: 32, title: "Excel Arena", category: "excel", status: "Live", icon: "🏟️", url: "https://baselghanem.github.io/ExcelArena/", repoUrl: "https://github.com/BaselGhanem/ExcelArena/blob/main/index.html", tech: ["Excel", "Practice"], keywords: ["arena", "excel"] },
+            { id: 33, title: "Excel 10 JOD", category: "excel", status: "Live", icon: "💵", url: "https://baselghanem.github.io/Excel10JOD/", repoUrl: "https://github.com/BaselGhanem/Excel10JOD/blob/main/index.html", tech: ["Excel"], keywords: ["excel", "10jod"] },
+            { id: 34, title: "S4 Subtotal", category: "excel", status: "Live", icon: "➕", url: "https://baselghanem.github.io/S4-Subtotal/", repoUrl: "https://github.com/BaselGhanem/S4-Subtotal/blob/main/index.html", tech: ["Excel"], keywords: ["subtotal", "excel"] },
+            { id: 35, title: "Eduvision", category: "web", status: "Live", icon: "🔭", url: "https://baselghanem.github.io/Eduvision/", repoUrl: "https://github.com/BaselGhanem/Eduvision/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["education", "vision"] },
+            { id: 36, title: "Ramadan 26", category: "web", status: "Live", icon: "🕌", url: "https://baselghanem.github.io/Ramadan26/", repoUrl: "https://github.com/BaselGhanem/Ramadan26/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["ramadan", "26"] },
+            { id: 37, title: "System Prompts & Models of AI Tools", category: "tool", status: "AI", icon: "⚙️", url: "https://baselghanem.github.io/system-prompts-and-models-of-ai-tools/", repoUrl: "https://github.com/BaselGhanem/system-prompts-and-models-of-ai-tools/blob/main/index.html", tech: ["AI", "Prompts"], keywords: ["ai", "models", "prompts"] },
+            { id: 38, title: "AI Tools", category: "tool", status: "AI", icon: "🛠️", url: "https://baselghanem.github.io/AI-Tools/", repoUrl: "https://github.com/BaselGhanem/AI-Tools/blob/main/index.html", tech: ["AI", "Tools"], keywords: ["ai", "tools"] },
+            // المشاريع الجديدة (39-60)
+            { id: 39, title: "Ordering System", category: "web", status: "Live", icon: "🛒", url: "https://baselghanem.github.io/OrderingSystem/", repoUrl: "https://github.com/BaselGhanem/OrderingSystem/blob/main/index.html", tech: ["HTML", "CSS", "JS"], keywords: ["ordering", "system"] },
+            { id: 40, title: "Darza", category: "web", status: "Live", icon: "🏠", url: "https://baselghanem.github.io/Darza/", repoUrl: "https://github.com/BaselGhanem/Darza/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["darza"] },
+            { id: 41, title: "Golden Peak", category: "web", status: "Live", icon: "⛰️", url: "https://baselghanem.github.io/GoldenPeak/", repoUrl: "https://github.com/BaselGhanem/GoldenPeak/blob/main/index.html", tech: ["JavaScript"], keywords: ["golden", "peak"] },
+            { id: 42, title: "Pharmacloud", category: "web", status: "Live", icon: "💊", url: "https://baselghanem.github.io/Pharmacloud/", repoUrl: "https://github.com/BaselGhanem/Pharmacloud/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["pharmacy", "cloud"] },
+            { id: 43, title: "Layout Maker", category: "tool", status: "Live", icon: "📐", url: "https://baselghanem.github.io/LayoutMaker/", repoUrl: "https://github.com/BaselGhanem/LayoutMaker/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["layout", "design"] },
+            { id: 44, title: "DRZ Test", category: "web", status: "Live", icon: "🧪", url: "https://baselghanem.github.io/drztest/", repoUrl: "https://github.com/BaselGhanem/drztest/blob/main/index.html", tech: ["HTML"], keywords: ["test", "drz"] },
+            { id: 45, title: "Analytics Strategy", category: "excel", status: "Live", icon: "📊", url: "https://baselghanem.github.io/AnalyticsStrategy/", repoUrl: "https://github.com/BaselGhanem/AnalyticsStrategy/blob/main/index.html", tech: ["Analytics"], keywords: ["analytics", "strategy"] },
+            { id: 46, title: "Doctor List", category: "web", status: "Live", icon: "👨‍⚕️", url: "https://baselghanem.github.io/DoctorList/", repoUrl: "https://github.com/BaselGhanem/DoctorList/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["doctors", "list"] },
+            { id: 47, title: "Excel Registration", category: "excel", status: "Live", icon: "📝", url: "https://baselghanem.github.io/ExcelRegistration/", repoUrl: "https://github.com/BaselGhanem/ExcelRegistration/blob/main/index.html", tech: ["Excel"], keywords: ["registration", "excel"] },
+            { id: 48, title: "Mspharma Eid", category: "web", status: "Live", icon: "🌙", url: "https://baselghanem.github.io/MspharmaEid/", repoUrl: "https://github.com/BaselGhanem/MspharmaEid/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["eid", "mspharma"] },
+            { id: 49, title: "LinkedIn Dashboards", category: "web", status: "Live", icon: "📱", url: "https://baselghanem.github.io/LinkedinDashboards/", repoUrl: "https://github.com/BaselGhanem/LinkedinDashboards/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["linkedin", "dashboards"] },
+            { id: 50, title: "51 Rooms", category: "web", status: "Live", icon: "🏨", url: "https://baselghanem.github.io/51Rooms/", repoUrl: "https://github.com/BaselGhanem/51Rooms/blob/main/index.html", tech: ["HTML"], keywords: ["rooms", "hotel"] },
+            { id: 51, title: "Cloud", category: "web", status: "Live", icon: "☁️", url: "https://baselghanem.github.io/Cloud/", repoUrl: "https://github.com/BaselGhanem/Cloud/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["cloud"] },
+            { id: 52, title: "DAD Eid Greeting", category: "web", status: "Live", icon: "🎉", url: "https://baselghanem.github.io/DAD-Eid-Greeting/", repoUrl: "https://github.com/BaselGhanem/DAD-Eid-Greeting/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["eid", "greeting"] },
+            { id: 53, title: "Stories from Palestine - Tammon", category: "web", status: "Live", icon: "🇵🇸", url: "https://baselghanem.github.io/StoriesfromPalestine-Tammon/", repoUrl: "https://github.com/BaselGhanem/StoriesfromPalestine-Tammon/blob/main/index.html", tech: ["HTML", "CSS"], keywords: ["palestine", "stories"] },
+            { id: 54, title: "WhatsApp", category: "tool", status: "Live", icon: "💬", url: "https://baselghanem.github.io/Whatsapp/", repoUrl: "https://github.com/BaselGhanem/Whatsapp/blob/main/index.html", tech: ["HTML", "JS"], keywords: ["whatsapp", "chat"] },
+            { id: 55, title: "Power BI Intro", category: "excel", status: "Live", icon: "📈", url: "https://baselghanem.github.io/PowerBi-Intro/", repoUrl: "https://github.com/BaselGhanem/PowerBi-Intro/blob/main/index.html", tech: ["Power BI"], keywords: ["powerbi", "intro"] },
+            { id: 56, title: "Power BI", category: "excel", status: "Live", icon: "📊", url: "https://baselghanem.github.io/PowerBi/", repoUrl: "https://github.com/BaselGhanem/PowerBi/blob/main/index.html", tech: ["Power BI"], keywords: ["powerbi"] },
+            { id: 57, title: "Zaid Numbers", category: "web", status: "Live", icon: "🔢", url: "https://baselghanem.github.io/Zaidnumbers/", repoUrl: "https://github.com/BaselGhanem/Zaidnumbers/blob/main/index.html", tech: ["HTML"], keywords: ["numbers", "zaid"] },
+            { id: 58, title: "Vlookup Dad", category: "excel", status: "Live", icon: "🔍", url: "https://baselghanem.github.io/Vlookup-Dad/", repoUrl: "https://github.com/BaselGhanem/Vlookup-Dad/blob/main/index.html", tech: ["Excel"], keywords: ["vlookup", "dad"] },
+            { id: 59, title: "Power BI with Bogdan", category: "excel", status: "Live", icon: "📉", url: "https://baselghanem.github.io/PowerBIwithBogdan/", repoUrl: "https://github.com/BaselGhanem/PowerBIwithBogdan/blob/main/index.html", tech: ["Power BI", "Tips"], keywords: ["powerbi", "bogdan"] }
+        ];
 
-        class AppCore {
-            constructor() {
-                let localProjects = JSON.parse(localStorage.getItem('basel_projects_v2'));
-                // Force update if local storage has old data count
-                let initialProjects = (localProjects && localProjects.length === DefaultData.length) ? localProjects : DefaultData;
+        class AppCore {
+            constructor() {
+                let localProjects = JSON.parse(localStorage.getItem('basel_projects_v2'));
+                let initialProjects;
+                
+                if (localProjects && Array.isArray(localProjects)) {
+                    // دمج المشاريع الجديدة (من DefaultData) مع المحفوظة محلياً دون تكرار المعرفات
+                    const existingIds = new Set(localProjects.map(p => p.id));
+                    const newProjects = DefaultData.filter(p => !existingIds.has(p.id));
+                    if (newProjects.length > 0) {
+                        initialProjects = [...localProjects, ...newProjects];
+                        localStorage.setItem('basel_projects_v2', JSON.stringify(initialProjects));
+                    } else {
+                        initialProjects = localProjects;
+                    }
+                } else {
+                    initialProjects = DefaultData;
+                }
 
-                this.state = {
-                    projects: initialProjects,
-                    lang: localStorage.getItem('basel_lang_v2') || 'ar',
-                    theme: localStorage.getItem('basel_theme_v2') || 'dark',
-                    favorites: JSON.parse(localStorage.getItem('basel_favs_v2')) || [],
-                    filter: 'all',
-                    search: '',
-                    sort: 'default'
-                };
-                
-                this.ui = new UIManager(this);
-                this.admin = new AdminManager(this);
-                this.init();
-            }
+                this.state = {
+                    projects: initialProjects,
+                    lang: localStorage.getItem('basel_lang_v2') || 'ar',
+                    theme: localStorage.getItem('basel_theme_v2') || 'dark',
+                    favorites: JSON.parse(localStorage.getItem('basel_favs_v2')) || [],
+                    filter: 'all',
+                    search: '',
+                    sort: 'default'
+                };
+                
+                this.ui = new UIManager(this);
+                this.admin = new AdminManager(this);
+                this.init();
+            }
 
-            init() {
-                this.applySettings();
-                this.ui.render();
-                this.attachEvents();
-                this.setupParallax();
-                this.startHealthCheck();
-            }
+            init() {
+                this.applySettings();
+                this.ui.render();
+                this.attachEvents();
+                this.setupParallax();
+                this.startHealthCheck();
+            }
 
-            saveState() {
-                localStorage.setItem('basel_projects_v2', JSON.stringify(this.state.projects));
-                localStorage.setItem('basel_favs_v2', JSON.stringify(this.state.favorites));
-                localStorage.setItem('basel_lang_v2', this.state.lang);
-                localStorage.setItem('basel_theme_v2', this.state.theme);
-            }
+            saveState() {
+                localStorage.setItem('basel_projects_v2', JSON.stringify(this.state.projects));
+                localStorage.setItem('basel_favs_v2', JSON.stringify(this.state.favorites));
+                localStorage.setItem('basel_lang_v2', this.state.lang);
+                localStorage.setItem('basel_theme_v2', this.state.theme);
+            }
 
-            toggleFavorite(id) {
-                const idx = this.state.favorites.indexOf(id);
-                if (idx > -1) this.state.favorites.splice(idx, 1);
-                else this.state.favorites.push(id);
-                this.saveState();
-                this.ui.renderGrid();
-                this.ui.showToast(idx > -1 ? "Removed from Favorites" : "Added to Favorites");
-            }
+            toggleFavorite(id) {
+                const idx = this.state.favorites.indexOf(id);
+                if (idx > -1) this.state.favorites.splice(idx, 1);
+                else this.state.favorites.push(id);
+                this.saveState();
+                this.ui.renderGrid();
+                this.ui.showToast(idx > -1 ? "Removed from Favorites" : "Added to Favorites");
+            }
 
-            applySettings() {
-                document.documentElement.setAttribute('dir', this.state.lang === 'ar' ? 'rtl' : 'ltr');
-                document.documentElement.setAttribute('lang', this.state.lang);
-                document.documentElement.setAttribute('data-theme', this.state.theme);
-                
-                const dict = Translations[this.state.lang];
-                document.querySelectorAll('[data-key]').forEach(el => {
-                    const key = el.getAttribute('data-key');
-                    if (dict[key]) el.textContent = dict[key];
-                });
-                
-                document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
-                document.getElementById('langToggle').textContent = this.state.lang === 'ar' ? 'EN' : 'AR';
-                document.getElementById('themeToggle').innerHTML = this.state.theme === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-            }
+            applySettings() {
+                document.documentElement.setAttribute('dir', this.state.lang === 'ar' ? 'rtl' : 'ltr');
+                document.documentElement.setAttribute('lang', this.state.lang);
+                document.documentElement.setAttribute('data-theme', this.state.theme);
+                
+                const dict = Translations[this.state.lang];
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    const key = el.getAttribute('data-key');
+                    if (dict[key]) el.textContent = dict[key];
+                });
+                
+                document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
+                document.getElementById('langToggle').textContent = this.state.lang === 'ar' ? 'EN' : 'AR';
+                document.getElementById('themeToggle').innerHTML = this.state.theme === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            }
 
-            getFilteredProjects() {
-                let result = this.state.projects.filter(p => {
-                    const term = this.state.search.toLowerCase();
-                    const textMatch = p.title.toLowerCase().includes(term) || 
-                                      (p.keywords || []).some(k => k.includes(term)) ||
-                                      (p.status || "").toLowerCase().includes(term);
-                    
-                    let filterMatch = true;
-                    if (this.state.filter === 'favorites') {
-                        filterMatch = this.state.favorites.includes(p.id);
-                    } else if (this.state.filter !== 'all') {
-                        filterMatch = p.category === this.state.filter;
-                    }
+            getFilteredProjects() {
+                let result = this.state.projects.filter(p => {
+                    const term = this.state.search.toLowerCase();
+                    const textMatch = p.title.toLowerCase().includes(term) || 
+                                      (p.keywords || []).some(k => k.includes(term)) ||
+                                      (p.status || "").toLowerCase().includes(term);
+                    
+                    let filterMatch = true;
+                    if (this.state.filter === 'favorites') {
+                        filterMatch = this.state.favorites.includes(p.id);
+                    } else if (this.state.filter !== 'all') {
+                        filterMatch = p.category === this.state.filter;
+                    }
 
-                    return textMatch && filterMatch;
-                });
+                    return textMatch && filterMatch;
+                });
 
-                if (this.state.sort === 'name') result.sort((a,b) => a.title.localeCompare(b.title));
-                if (this.state.sort === 'status') result.sort((a,b) => a.status.localeCompare(b.status));
-                if (this.state.sort === 'newest') result.sort((a,b) => b.id - a.id);
+                if (this.state.sort === 'name') result.sort((a,b) => a.title.localeCompare(b.title));
+                if (this.state.sort === 'status') result.sort((a,b) => a.status.localeCompare(b.status));
+                if (this.state.sort === 'newest') result.sort((a,b) => new Date(b.created || 0) - new Date(a.created || 0));
 
-                return result;
-            }
+                return result;
+            }
 
-            attachEvents() {
-                const searchInput = document.getElementById('searchInput');
-                searchInput.addEventListener('input', (e) => {
-                    this.state.search = e.target.value;
-                    this.ui.renderGrid();
-                    this.ui.renderStats();
-                });
+            attachEvents() {
+                const searchInput = document.getElementById('searchInput');
+                searchInput.addEventListener('input', (e) => {
+                    this.state.search = e.target.value;
+                    this.ui.renderGrid();
+                    this.ui.renderStats();
+                });
 
-                document.getElementById('filterContainer').addEventListener('click', (e) => {
-                    if(e.target.tagName === 'SELECT') return;
-                    const btn = e.target.closest('.filter-chip');
-                    if (!btn) return;
-                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                    btn.classList.add('active');
-                    this.state.filter = btn.dataset.filter;
-                    this.ui.renderGrid();
-                });
+                document.getElementById('filterContainer').addEventListener('click', (e) => {
+                    if(e.target.tagName === 'SELECT') return;
+                    const btn = e.target.closest('.filter-chip');
+                    if (!btn) return;
+                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.state.filter = btn.dataset.filter;
+                    this.ui.renderGrid();
+                });
 
-                document.getElementById('sortSelect').addEventListener('change', (e) => {
-                    this.state.sort = e.target.value;
-                    this.ui.renderGrid();
-                });
+                document.getElementById('sortSelect').addEventListener('change', (e) => {
+                    this.state.sort = e.target.value;
+                    this.ui.renderGrid();
+                });
 
-                document.getElementById('themeToggle').addEventListener('click', () => {
-                    this.state.theme = this.state.theme === 'dark' ? 'light' : 'dark';
-                    this.applySettings();
-                    this.saveState();
-                });
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.state.theme = this.state.theme === 'dark' ? 'light' : 'dark';
+                    this.applySettings();
+                    this.saveState();
+                });
 
-                document.getElementById('langToggle').addEventListener('click', () => {
-                    this.state.lang = this.state.lang === 'ar' ? 'en' : 'ar';
-                    this.applySettings();
-                    this.saveState();
-                    this.ui.renderStats();
-                });
+                document.getElementById('langToggle').addEventListener('click', () => {
+                    this.state.lang = this.state.lang === 'ar' ? 'en' : 'ar';
+                    this.applySettings();
+                    this.saveState();
+                    this.ui.renderStats();
+                });
 
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === '/' && document.activeElement !== searchInput) {
-                        e.preventDefault();
-                        searchInput.focus();
-                    }
-                    if (e.key === 'Escape') {
-                        this.ui.closeModal();
-                        searchInput.value = '';
-                        searchInput.blur();
-                        this.state.search = '';
-                        this.ui.renderGrid();
-                    }
-                    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'b') {
-                        this.admin.toggle();
-                    }
-                });
-            }
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === '/' && document.activeElement !== searchInput) {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                    if (e.key === 'Escape') {
+                        this.ui.closeModal();
+                        searchInput.value = '';
+                        searchInput.blur();
+                        this.state.search = '';
+                        this.ui.renderGrid();
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'b') {
+                        this.admin.toggle();
+                    }
+                });
+            }
 
-            setupParallax() {
-                const hero = document.getElementById('hero');
-                document.addEventListener('mousemove', (e) => {
-                    if(window.innerWidth < 768) return;
-                    const x = (window.innerWidth / 2 - e.pageX) / 50;
-                    const y = (window.innerHeight / 2 - e.pageY) / 50;
-                    hero.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-                });
-            }
+            setupParallax() {
+                const hero = document.getElementById('hero');
+                document.addEventListener('mousemove', (e) => {
+                    if(window.innerWidth < 768) return;
+                    const x = (window.innerWidth / 2 - e.pageX) / 50;
+                    const y = (window.innerHeight / 2 - e.pageY) / 50;
+                    hero.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+                });
+            }
 
-            startHealthCheck() {
-                setInterval(() => {
-                    this.state.projects.forEach(p => {
-                        fetch(p.url, { mode: 'no-cors', cache: 'no-cache' })
-                            .then(() => this.ui.updateStatus(p.id, 'online'))
-                            .catch(() => this.ui.updateStatus(p.id, 'offline'));
-                    });
-                }, 120000);
-            }
-        }
+            startHealthCheck() {
+                setInterval(() => {
+                    this.state.projects.forEach(p => {
+                        fetch(p.url, { mode: 'no-cors', cache: 'no-cache' })
+                            .then(() => this.ui.updateStatus(p.id, 'online'))
+                            .catch(() => this.ui.updateStatus(p.id, 'offline'));
+                    });
+                }, 120000);
+            }
+        }
 
-        class UIManager {
-            constructor(app) {
-                this.app = app;
-                this.grid = document.getElementById('projectsGrid');
-                this.setupSpotlight();
-            }
+        class UIManager {
+            constructor(app) {
+                this.app = app;
+                this.grid = document.getElementById('projectsGrid');
+                this.setupSpotlight();
+            }
 
-            setupSpotlight() {
-                this.grid.onmousemove = e => {
-                    requestAnimationFrame(() => {
-                        for(const card of document.getElementsByClassName("card")) {
-                            const rect = card.getBoundingClientRect();
-                            const x = e.clientX - rect.left;
-                            const y = e.clientY - rect.top;
-                            card.style.setProperty("--mouse-x", `${x}px`);
-                            card.style.setProperty("--mouse-y", `${y}px`);
-                        }
-                    });
-                };
-            }
+            setupSpotlight() {
+                this.grid.onmousemove = e => {
+                    requestAnimationFrame(() => {
+                        for(const card of document.getElementsByClassName("card")) {
+                            const rect = card.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            card.style.setProperty("--mouse-x", `${x}px`);
+                            card.style.setProperty("--mouse-y", `${y}px`);
+                        }
+                    });
+                };
+            }
 
-            render() {
-                this.renderStats();
-                this.renderGrid();
-            }
+            render() {
+                this.renderStats();
+                this.renderGrid();
+            }
 
-            renderStats() {
-                const projects = this.app.getFilteredProjects();
-                const total = projects.length;
-                const live = projects.filter(p => p.status === 'Live' || p.status === 'Stable').length;
-                const ai = projects.filter(p => (p.status === 'AI') || (p.keywords||[]).includes('ai')).length;
-                
-                const dict = Translations[this.app.state.lang];
-                const html = `
-                    <div class="stat-item">
-                        <span class="stat-val count-anim" data-val="${total}">0</span>
-                        <span class="stat-lbl">${dict.statsTotal}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-val count-anim" style="color:var(--accent-success)" data-val="${live}">0</span>
-                        <span class="stat-lbl">${dict.statsLive}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-val count-anim" style="color:var(--accent-secondary)" data-val="${ai}">0</span>
-                        <span class="stat-lbl">${dict.statsAi}</span>
-                    </div>
-                `;
-                document.getElementById('statsStrip').innerHTML = html;
-                
-                document.querySelectorAll('.count-anim').forEach(el => {
-                    const target = +el.dataset.val;
-                    let count = 0;
-                    const inc = Math.max(1, Math.ceil(target / 15));
-                    const timer = setInterval(() => {
-                        count += inc;
-                        if (count >= target) { count = target; clearInterval(timer); }
-                        el.textContent = count;
-                    }, 40);
-                });
-            }
+            renderStats() {
+                const projects = this.app.getFilteredProjects();
+                const total = projects.length;
+                const live = projects.filter(p => p.status === 'Live' || p.status === 'Stable').length;
+                const ai = projects.filter(p => (p.status === 'AI') || (p.keywords||[]).includes('ai')).length;
+                
+                const dict = Translations[this.app.state.lang];
+                const html = `
+                    <div class="stat-item">
+                        <span class="stat-val count-anim" data-val="${total}">0</span>
+                        <span class="stat-lbl">${dict.statsTotal}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val count-anim" style="color:var(--accent-success)" data-val="${live}">0</span>
+                        <span class="stat-lbl">${dict.statsLive}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val count-anim" style="color:var(--accent-secondary)" data-val="${ai}">0</span>
+                        <span class="stat-lbl">${dict.statsAi}</span>
+                    </div>
+                `;
+                document.getElementById('statsStrip').innerHTML = html;
+                
+                document.querySelectorAll('.count-anim').forEach(el => {
+                    const target = +el.dataset.val;
+                    let count = 0;
+                    const inc = Math.max(1, Math.ceil(target / 15));
+                    const timer = setInterval(() => {
+                        count += inc;
+                        if (count >= target) { count = target; clearInterval(timer); }
+                        el.textContent = count;
+                    }, 40);
+                });
+            }
 
-            renderGrid() {
-                const data = this.app.getFilteredProjects();
-                this.grid.innerHTML = '';
+            renderGrid() {
+                const data = this.app.getFilteredProjects();
+                this.grid.innerHTML = '';
 
-                if (data.length === 0) {
-                    this.grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--text-muted)">لا توجد نتائج مطابقة</div>`;
-                    return;
-                }
+                if (data.length === 0) {
+                    this.grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--text-muted)">لا توجد نتائج مطابقة</div>`;
+                    return;
+                }
 
-                const fragment = document.createDocumentFragment();
+                const fragment = document.createDocumentFragment();
 
-                data.forEach((p, idx) => {
-                    const isFav = this.app.state.favorites.includes(p.id);
-                    const techStack = (p.tech || []).map(t => `<span class="tech-badge">${t}</span>`).join('');
-                    
-                    const el = document.createElement('div');
-                    el.className = 'card';
-                    el.tabIndex = 0;
-                    
-                    el.onclick = (e) => this.handleCardClick(e, p.url);
-                    el.onkeydown = (e) => { if(e.key === 'Enter') this.handleCardClick(e, p.url); };
-                    
-                    let titleHtml = p.title;
-                    if (this.app.state.search) {
-                        const reg = new RegExp(`(${this.app.state.search})`, 'gi');
-                        titleHtml = titleHtml.replace(reg, '<span class="highlight">$1</span>');
-                    }
+                data.forEach((p, idx) => {
+                    const isFav = this.app.state.favorites.includes(p.id);
+                    const techStack = (p.tech || []).map(t => `<span class="tech-badge">${t}</span>`).join('');
+                    
+                    const el = document.createElement('div');
+                    el.className = 'card';
+                    el.tabIndex = 0;
+                    
+                    el.onclick = (e) => this.handleCardClick(e, p.url);
+                    el.onkeydown = (e) => { if(e.key === 'Enter') this.handleCardClick(e, p.url); };
+                    
+                    let titleHtml = p.title;
+                    if (this.app.state.search) {
+                        const reg = new RegExp(`(${this.app.state.search})`, 'gi');
+                        titleHtml = titleHtml.replace(reg, '<span class="highlight">$1</span>');
+                    }
 
-                    el.innerHTML = `
-                        <div class="card-header">
-                            <div class="card-icon">${p.icon}</div>
-                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); App.toggleFavorite(${p.id})">
-                                <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
-                            </button>
-                        </div>
-                        <h3 class="card-title">${titleHtml}</h3>
-                        <div class="card-meta">
-                            <div class="status-dot online" id="status-${p.id}"></div>
-                            <span>${p.category.toUpperCase()}</span>
-                            <span>•</span>
-                            <span>${p.status}</span>
-                        </div>
-                        <div class="card-tech">${techStack}</div>
-                        <div class="card-actions">
-                            <a href="${p.repoUrl}" target="_blank" class="btn" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i> الكود</a>
-                            <a href="${p.url}" target="_blank" class="btn btn-primary" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض</a>
-                        </div>
-                    `;
-                    
-                    el.style.animation = `heroReveal 0.6s var(--ease-cinematic) ${idx * 0.05}s forwards`;
-                    fragment.appendChild(el);
-                });
-                
-                this.grid.appendChild(fragment);
-            }
+                    el.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-icon">${p.icon}</div>
+                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); App.toggleFavorite(${p.id})">
+                                <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
+                            </button>
+                        </div>
+                        <h3 class="card-title">${titleHtml}</h3>
+                        <div class="card-meta">
+                            <div class="status-dot online" id="status-${p.id}"></div>
+                            <span>${p.category.toUpperCase()}</span>
+                            <span>•</span>
+                            <span>${p.status}</span>
+                        </div>
+                        <div class="card-tech">${techStack}</div>
+                        <div class="card-actions">
+                            <a href="${p.repoUrl}" target="_blank" class="btn" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i> الكود</a>
+                            <a href="${p.url}" target="_blank" class="btn btn-primary" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض</a>
+                        </div>
+                    `;
+                    
+                    el.style.animation = `heroReveal 0.6s var(--ease-cinematic) ${idx * 0.05}s forwards`;
+                    fragment.appendChild(el);
+                });
+                
+                this.grid.appendChild(fragment);
+            }
 
-            handleCardClick(e, url) {
-                if (e.ctrlKey || e.metaKey || window.innerWidth < 768) {
-                    window.open(url, '_blank');
-                } else {
-                    this.openPreview(url);
-                }
-            }
+            handleCardClick(e, url) {
+                if (e.ctrlKey || e.metaKey || window.innerWidth < 768) {
+                    window.open(url, '_blank');
+                } else {
+                    this.openPreview(url);
+                }
+            }
 
-            openPreview(url) {
-                const modal = document.getElementById('previewModal');
-                const frame = document.getElementById('previewFrame');
-                const link = document.getElementById('modalExternal');
-                const loader = document.getElementById('skeletonLoader');
+            openPreview(url) {
+                const modal = document.getElementById('previewModal');
+                const frame = document.getElementById('previewFrame');
+                const link = document.getElementById('modalExternal');
+                const loader = document.getElementById('skeletonLoader');
 
-                frame.classList.remove('loaded');
-                loader.style.opacity = '1';
-                
-                frame.onload = () => {
-                    loader.style.opacity = '0';
-                    frame.classList.add('loaded');
-                };
+                frame.classList.remove('loaded');
+                loader.style.opacity = '1';
+                
+                frame.onload = () => {
+                    loader.style.opacity = '0';
+                    frame.classList.add('loaded');
+                };
 
-                frame.src = url;
-                link.href = url;
-                modal.classList.add('active');
-            }
+                frame.src = url;
+                link.href = url;
+                modal.classList.add('active');
+            }
 
-            closeModal() {
-                const modal = document.getElementById('previewModal');
-                const frame = document.getElementById('previewFrame');
-                modal.classList.remove('active');
-                setTimeout(() => { frame.src = ''; }, 400);
-            }
+            closeModal() {
+                const modal = document.getElementById('previewModal');
+                const frame = document.getElementById('previewFrame');
+                modal.classList.remove('active');
+                setTimeout(() => { frame.src = ''; }, 400);
+            }
 
-            updateStatus(id, status) {
-                const dot = document.getElementById(`status-${id}`);
-                if (dot) dot.className = `status-dot ${status}`;
-            }
+            updateStatus(id, status) {
+                const dot = document.getElementById(`status-${id}`);
+                if (dot) dot.className = `status-dot ${status}`;
+            }
 
-            showToast(msg) {
-                const t = document.getElementById('toast');
-                t.textContent = msg;
-                t.classList.add('show');
-                setTimeout(() => t.classList.remove('show'), 3000);
-            }
-        }
+            showToast(msg) {
+                const t = document.getElementById('toast');
+                t.textContent = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
+        }
 
-        class AdminManager {
-            constructor(app) {
-                this.app = app;
-                this.panel = document.getElementById('adminPanel');
-                this.editor = document.getElementById('jsonEditor');
-                this.isOpen = false;
-            }
+        class AdminManager {
+            constructor(app) {
+                this.app = app;
+                this.panel = document.getElementById('adminPanel');
+                this.editor = document.getElementById('jsonEditor');
+                this.isOpen = false;
+            }
 
-            toggle() {
-                this.isOpen = !this.isOpen;
-                this.panel.classList.toggle('open', this.isOpen);
-                if (this.isOpen) {
-                    this.editor.value = JSON.stringify(this.app.state.projects, null, 2);
-                    this.editor.focus();
-                }
-            }
+            toggle() {
+                this.isOpen = !this.isOpen;
+                this.panel.classList.toggle('open', this.isOpen);
+                if (this.isOpen) {
+                    this.editor.value = JSON.stringify(this.app.state.projects, null, 2);
+                    this.editor.focus();
+                }
+            }
 
-            saveData() {
-                try {
-                    const newData = JSON.parse(this.editor.value);
-                    if (!Array.isArray(newData)) throw new Error("Must be an array");
-                    this.app.state.projects = newData;
-                    this.app.saveState();
-                    this.app.ui.render();
-                    this.toggle();
-                    this.app.ui.showToast("Deployment Successful");
-                } catch (e) {
-                    this.app.ui.showToast("JSON Error: " + e.message);
-                }
-            }
+            saveData() {
+                try {
+                    const newData = JSON.parse(this.editor.value);
+                    if (!Array.isArray(newData)) throw new Error("Must be an array");
+                    this.app.state.projects = newData;
+                    this.app.saveState();
+                    this.app.ui.render();
+                    this.toggle();
+                    this.app.ui.showToast("Deployment Successful");
+                } catch (e) {
+                    this.app.ui.showToast("JSON Error: " + e.message);
+                }
+            }
 
-            resetData() {
-                if(confirm("Factory Reset?")) {
-                    localStorage.removeItem('basel_projects_v2');
-                    location.reload();
-                }
-            }
-        }
+            resetData() {
+                if(confirm("Factory Reset?")) {
+                    localStorage.removeItem('basel_projects_v2');
+                    location.reload();
+                }
+            }
+        }
 
-        const App = new AppCore();
-    </script>
+        const App = new AppCore();
+    </script>
 </body>
 </html>
